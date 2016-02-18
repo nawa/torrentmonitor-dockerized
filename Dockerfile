@@ -16,7 +16,8 @@ ADD config.php   /usr/share/nginx/html/torrentmonitor/config.php
 RUN mkdir /usr/share/nginx/html/torrentmonitor/db
 RUN cat /usr/share/nginx/html/torrentmonitor/db_schema/sqlite.sql | sqlite3 /usr/share/nginx/html/torrentmonitor/db_schema/tm.sqlite
 
-RUN echo "0 * * * *  php -q /usr/share/nginx/html/torrentmonitor/engine.php >> /var/log/torrentmonitor_error.log 2>&1" >> /etc/cron.d/torrentmonitor
+RUN (crontab -l ; echo "0 * * * *  php -q /usr/share/nginx/html/torrentmonitor/engine.php >> /var/log/nginx/torrentmonitor_error.log 2>&1") | crontab -
+
 
 RUN mkdir -p /etc/my_init.d
 RUN echo '#!/bin/sh\n\
@@ -26,10 +27,16 @@ then\n\
 fi\n\
 chown -R www-data:www-data /usr/share/nginx/html/torrentmonitor\n\
 chmod -R a+rw /usr/share/nginx/html/torrentmonitor\n\
-chmod -R 777 /usr/share/nginx/html/torrentmonitor/db\n\
+chmod -R 777 /usr/share/nginx/html/torrentmonitor/db'\
+>> /etc/my_init.d/torrentmonitor_init.sh
+RUN chmod +x /etc/my_init.d/torrentmonitor_init.sh
+
+
+RUN mkdir /etc/service/nginx
+RUN echo '#!/bin/sh\n\
 service php5-fpm start && service nginx start'\
->> /etc/my_init.d/start_nginx.sh
-RUN chmod +x /etc/my_init.d/start_nginx.sh
+>> /etc/service/nginx/run
+RUN chmod +x /etc/service/nginx/run
 
 VOLUME ["/usr/share/nginx/html/torrentmonitor/db", "/usr/share/nginx/html/torrentmonitor/torrents"]
 
