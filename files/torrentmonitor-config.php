@@ -16,5 +16,5 @@ class Config
 
 #Для SQLite:
 Config::write('db.type', 'sqlite');
-Config::write('db.basename', '/usr/share/nginx/html/torrentmonitor/db/tm.sqlite'); #Указывайте _абсолютный_ путь до файла БД (расширение рекомендуется использовать .sqlite)
+Config::write('db.basename', '/DATA/htdocs/db/tm.sqlite'); #Указывайте _абсолютный_ путь до файла БД (расширение рекомендуется использовать .sqlite)
 ?>

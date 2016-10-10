@@ -31,11 +31,11 @@ Dockerized torrentmonitor
 1. Установите `docker` https://docs.docker.com/engine/installation/linux/
 2. Запустите контейнер с приложением, используя образ `nawa/torrentmonitor`
 
-		sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torrents:/usr/share/nginx/html/torrentmonitor/torrents -v path_to_data_folder/db:/usr/share/nginx/html/torrentmonitor/db nawa/torrentmonitor
+		sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torrents:/DATA/htdocs/torrents -v path_to_data_folder/db:/DATA/htdocs/db nawa/torrentmonitor
 
 	* можно сменить порт с `8080` на более подходящий, если это надо. Порт `80` оставить как есть - это порт внутри контейнера
 	* при запуске используются `volumes`. Это что-то наподобие общих директорий между контейнером и хостовой машиной. Здесь два `volume` - один для базы, другой для скачанных торрент файлов. Смысл такой, что их можно использовать для бэкапа данных или если нужно стартануть контейнер с новой версией. Надеюсь это не понадобится, т.к. torrentmonitor обновляется сам, но лучше `volumes` использовать. После запуска контейнера и использования приложения в директориях `path_to_data_folder/torrents` и `path_to_data_folder/db` появятся файлы sqlite базы и файлы скачанных торрентов соответственно. Если все таки они не нужны, то можно просто убрать параметры с `-v`
-3. Открываем в браузере [http://localhost:8080/torrentmonitor/index.php](http://localhost:8080/torrentmonitor/index.php). Именно так - как сделать лучше, например в виде `http://localhost:8080` подскажите кто знает что нужно менять в Nginx+PHP
+3. Открываем в браузере [http://localhost:8080](http://localhost:8080)
 4. Profit
 
 ###Дополнительно
@@ -50,7 +50,7 @@ sudo docker restart torrentmonitor
 docker exec -it torrentmonitor bash
 ```
 
-Иногда выходят новые версии образа, например правится некоторый баг. Вообще принято, чтобы выходила новая версия образа, если выходит новая версия приложения, но т.к. `torrentmonitor` умеет обновляться сам, то в обновлять образ в этом случае особой необходимости нет. Но все таки если это понадобилось, необходимо удалить старый контейнер и срартовать новый, обновить существующий никак нельзя
+Иногда выходят новые версии образа, например правится некоторый баг. Вообще принято, чтобы выходила новая версия образа, если выходит новая версия приложения, но т.к. `torrentmonitor` умеет обновляться сам, то обновлять образ в этом случае особой необходимости нет. Но все таки если это понадобилось, необходимо удалить старый контейнер и срартовать новый, обновить существующий никак нельзя
 ```bash
 sudo docker stop torrentmonitor //останавливаем контейнер
 sudo docker rm torrentmonitor	//удаляем его
@@ -61,7 +61,7 @@ sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torre
 ```
 
 ##Windows, Mac
-`docker` работает только на Linux, но запустить хочется на Windows. Это можно сделать используя [docker-machine](https://docs.docker.com/engine/installation/windows/), но сделать это не получилось, т.к. не смог побороть проблему с пробросом общих директорий. Поэтому будет использовать `Vagrant` - это менеджер управления виртуальными машинами. Схема будет такая - с помощью `Vagrant` мы стартанем виртуальную машину c Linux, а уже на ней запустим `docker`-контейнер с `torrentmonitor`. При этом в общей директории будут находится файл базы `sqlite` и скачанные торрент-файлы - для бэкапа
+`docker` работает только на Linux, но запустить хочется на Windows. Это можно сделать используя [docker-machine](https://docs.docker.com/engine/installation/windows/), но сделать это не получилось, т.к. не смог побороть проблему с пробросом общих директорий. Поэтому будем использовать `Vagrant` - это менеджер управления виртуальными машинами. Схема будет такая - с помощью `Vagrant` мы стартанем виртуальную машину c Linux, а уже на ней запустим `docker`-контейнер с `torrentmonitor`. При этом в общей директории будут находится файл базы `sqlite` и скачанные торрент-файлы - для бэкапа
 
 ###Использование
 
@@ -76,7 +76,7 @@ sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torre
 		vagrant up
 
 	Ждем пока все закончится, это может занять до 10 мин при первом запуске. После того, как стартанет виртуалка, автоматически стартанет необходимый `docker`-контейнер внутри
-6. Открываем в браузере [http://localhost:8080/torrentmonitor/index.php](http://localhost:8080/torrentmonitor/index.php)
+6. Открываем в браузере [http://localhost:8080](http://localhost:8080)
 7. Надеюсь, радуемся
 
 ###Дополнительно

@@ -1,0 +1,24 @@
+# MAIN_HOST=`/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'` docker-compose up -d
+
+torrentmonitor:
+  image: nawa/torrentmonitor
+  ports:
+   - "8080:80"
+  volumes:
+   - /tmp/torrentmonitor/torrents:/DATA/htdocs/torrents
+   - /tmp/torrentmonitor/db:/DATA/htdocs/db
+  links:
+   - tor
+   - transmission
+
+tor:
+  image: cmondies/synology-tor-client-minimal
+
+transmission:
+  image: wbouzane/transmission-daemon
+  ports:
+   - "9091:9091"
+  volumes:
+   - /tmp/transmission-downloads:/downloads
+  extra_hosts:
+   - "dockerhost:${MAIN_HOST}"

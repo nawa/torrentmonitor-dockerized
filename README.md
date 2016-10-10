@@ -23,17 +23,17 @@ Supported torrent trackers
 * novafilm.tv
 
 ##Linux
-Linux version uses `docker` directly. You wouldn't download any sources because docker image will be downloaded from hub automatically
+Linux version uses `docker` directly. You wouldn't download any sources because docker image will be downloaded from docker hub automatically
 
 ###Usage
 1. Install docker https://docs.docker.com/engine/installation/linux/
 2. Run container from `nawa/torrentmonitor` image
 
-		sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torrents:/usr/share/nginx/html/torrentmonitor/torrents -v path_to_data_folder/db:/usr/share/nginx/html/torrentmonitor/db nawa/torrentmonitor
+		sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torrents:/DATA/htdocs/torrents -v path_to_data_folder/db:/DATA/htdocs/db nawa/torrentmonitor
 
-	* you can change server port from `8080` to your prefferred port
+	* you can change server port from `8080` to your preferred port
 	* you need to change volume location to database and downloaded torrents. As a result you could use persistent data between another containers
-3. Open browser on page [http://localhost:8080/torrentmonitor/index.php](http://localhost:8080/torrentmonitor/index.php)
+3. Open browser on page [http://localhost:8080](http://localhost:8080)
 4. Enjoy
 
 ###Additional
@@ -60,7 +60,7 @@ Windows version uses `vagrant` with `docker` inside because I had problems with 
 		vagrant up
 
 	And wait when the start will be finished
-6. Open browser on page [http://localhost:8080/torrentmonitor/index.php](http://localhost:8080/torrentmonitor/index.php)
+6. Open browser on page [http://localhost:8080](http://localhost:8080)
 7. Enjoy
 
 ###Additional

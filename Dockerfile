@@ -1,45 +1,104 @@
-FROM phusion/baseimage:latest
+FROM alpine:latest
 
-RUN apt-get update
-RUN apt-get install -y wget unzip nginx sqlite3
-RUN apt-get install -y php5-common php5-cli php5-fpm php5-curl php5-sqlite
-ADD nginx-default   /etc/nginx/sites-available/default
-ADD php.ini   /etc/php5/cli/php.ini
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+# define PHP and libiconv version
+ENV PHP_VERSION 5.6.17
+ENV LIBICONV_VERSION 1.14
 
-RUN wget -q http://korphome.ru/torrent_monitor/tm-latest.zip -O /tmp/tm-latest.zip
-RUN unzip /tmp/tm-latest.zip -d /tmp \
-	&& rm /tmp/tm-latest.zip \
-	&& mv /tmp/TorrentMonitor-master /usr/share/nginx/html/torrentmonitor
+# define workdir to home
+WORKDIR /install
 
-ADD config.php   /usr/share/nginx/html/torrentmonitor/config.php
-RUN mkdir /usr/share/nginx/html/torrentmonitor/db
-RUN cat /usr/share/nginx/html/torrentmonitor/db_schema/sqlite.sql | sqlite3 /usr/share/nginx/html/torrentmonitor/db_schema/tm.sqlite
+RUN apk update && apk upgrade && \
 
-RUN (crontab -l ; echo "0 * * * *  php -q /usr/share/nginx/html/torrentmonitor/engine.php >> /var/log/nginx/torrentmonitor_error.log 2>&1") | crontab -
+	apk add \
+			# install build tools
+			grep build-base tar re2c make file \
+			# PHP dependencies
+			libxpm libxml2 \
+			libxpm-dev libxml2-dev curl-dev \
+			# required software
+			curl nginx unzip sqlite && \
 
+	# download sources
+	curl -SL http://cz1.php.net/get/php-${PHP_VERSION}.tar.gz/from/this/mirror | tar -xz -C ./ && \
+	curl -SL http://ftp.gnu.org/pub/gnu/libiconv/libiconv-${LIBICONV_VERSION}.tar.gz | tar -xz -C ./ && \
+	cd ./libiconv-${LIBICONV_VERSION}/srclib && \
+	curl https://raw.githubusercontent.com/mxe/mxe/7e231efd245996b886b501dad780761205ecf376/src/libiconv-1-fixes.patch | patch stdio.in.h && \
+	cd - && \
 
-RUN mkdir -p /etc/my_init.d
-RUN echo '#!/bin/sh\n\
-if [ ! -f /usr/share/nginx/html/torrentmonitor/db/tm.sqlite ];\n\
-then\n\
-	cp /usr/share/nginx/html/torrentmonitor/db_schema/tm.sqlite /usr/share/nginx/html/torrentmonitor/db/tm.sqlite\n\
-fi\n\
-chown -R www-data:www-data /usr/share/nginx/html/torrentmonitor\n\
-chmod -R a+rw /usr/share/nginx/html/torrentmonitor\n\
-chmod -R 777 /usr/share/nginx/html/torrentmonitor/db'\
->> /etc/my_init.d/torrentmonitor_init.sh
-RUN chmod +x /etc/my_init.d/torrentmonitor_init.sh
+	# remove origin iconv
+	rm /usr/bin/iconv && \
 
+	# install libiconv from source
+	./libiconv-${LIBICONV_VERSION}/configure --prefix=/usr/local && \
+	make && make install && \
 
-RUN mkdir /etc/service/nginx
-RUN echo '#!/bin/sh\n\
-service php5-fpm start && service nginx start'\
->> /etc/service/nginx/run
-RUN chmod +x /etc/service/nginx/run
+	# install php from source
+	./php-${PHP_VERSION}/configure --prefix=/usr \
+		--with-pic \
+		--with-layout=GNU \
+		--enable-inline-optimization \
+		--disable-phpdbg \
+		--enable-cli \
+		--disable-cgi \
+		--enable-fpm \
+		--enable-mbstring \
+		--disable-zip \
+		--with-curl \
+		--with-iconv \
+		--with-iconv-dir=/usr/local \
+		--enable-pdo \
+		--with-pdo-sqlite \
+		--disable-intl \
+		--disable-debug \
+		--disable-rpath \
+		--disable-static \
+		--disable-pcntl \
+		--disable-ftp \
+		--disable-shared \
+		--disable-soap \
+		--with-config-file-path=/etc/php \
+		--with-config-file-scan-dir=/etc/php/conf.d \
+		--sysconfdir=/etc/php \
+		--without-pear \
+		--enable-sockets && \
 
-VOLUME ["/usr/share/nginx/html/torrentmonitor/db", "/usr/share/nginx/html/torrentmonitor/torrents"]
+	make && make install && \
+
+	wget -q http://korphome.ru/torrent_monitor/tm-latest.zip -O ./tm-latest.zip && \
+	unzip ./tm-latest.zip && \
+			mkdir -p /DATA/htdocs && \
+			mv ./TorrentMonitor-master/* /DATA/htdocs && \
+
+	(crontab -l ; echo "0 * * * *  php -q /DATA/htdocs/engine.php >> /DATA/logs/nginx/torrentmonitor_cron_error.log #2>&1") | crontab - && \
+
+	mkdir /DATA/htdocs/db && mkdir /run/nginx &&\
+	cat /DATA/htdocs/db_schema/sqlite.sql | sqlite3 /DATA/htdocs/db_schema/tm.sqlite && \
+
+	apk del    grep build-base tar re2c make file unzip sqlite \
+			   libxpm-dev libxml2-dev curl-dev && \
+
+	# clear apk cache
+	rm -rf /var/cache/apk/* && \
+
+	# remove sources
+	rm -rf /install
+
+# replace origin iconv
+ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
+
+# copy configs
+COPY files/php.ini                      /etc/php/php.ini
+COPY files/nginx.conf                   /etc/nginx/
+COPY files/php-fpm.conf                 /etc/php/
+COPY files/run.sh                       /torrentmonitor/
+COPY files/php.ini                      /etc/php5/cli/php.ini
+COPY files/torrentmonitor-config.php    /DATA/htdocs/config.php
+RUN chmod +x /torrentmonitor/run.sh
+
+WORKDIR /
+
+VOLUME ["/DATA/htdocs/db", "/DATA/htdocs/torrents"]
 
 EXPOSE 80
 
-CMD ["/sbin/my_init"]
+CMD ["/torrentmonitor/run.sh"]
