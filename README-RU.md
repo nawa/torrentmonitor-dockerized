@@ -24,7 +24,7 @@ Dockerized torrentmonitor
 
 Я что-то правлю в PHP во второй раз в жизни, так что если есть какие-то косяки в настройке PHP или Nginx, то пишите предложения
 
-##Linux
+##Linux не ARM
 Версия для Linux использует `docker` в чистом виде. Все что требуется - это поставить `docker` и выполнить команду. При этом скачается последняя версия образа с `docker hub` и запустится контейнер с работающим приложением
 
 ###Использование
@@ -59,6 +59,11 @@ sudo docker pull nawa/torrentmonitor //обновляем образ
 sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torrents:/usr/share/nginx/html/torrentmonitor/torrents -v path_to_data_folder/db:/usr/share/nginx/html/torrentmonitor/db nawa/torrentmonitor
 
 ```
+
+##Linux ARM
+Тоже самое что и обычный Linux, но нужно использовать образ `nawa/armhf-torrentmonitor`
+
+	sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torrents:/DATA/htdocs/torrents -v path_to_data_folder/db:/DATA/htdocs/db nawa/armhf-torrentmonitor
 
 ##Windows, Mac
 `docker` работает только на Linux, но запустить хочется на Windows. Это можно сделать используя [docker-machine](https://docs.docker.com/engine/installation/windows/), но сделать это не получилось, т.к. не смог побороть проблему с пробросом общих директорий. Поэтому будем использовать `Vagrant` - это менеджер управления виртуальными машинами. Схема будет такая - с помощью `Vagrant` мы стартанем виртуальную машину c Linux, а уже на ней запустим `docker`-контейнер с `torrentmonitor`. При этом в общей директории будут находится файл базы `sqlite` и скачанные торрент-файлы - для бэкапа

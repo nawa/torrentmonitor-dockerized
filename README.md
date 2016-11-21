@@ -22,7 +22,7 @@ Supported torrent trackers
 * newstudio.tv
 * novafilm.tv
 
-##Linux
+##Linux non ARM
 Linux version uses `docker` directly. You wouldn't download any sources because docker image will be downloaded from docker hub automatically
 
 ###Usage
@@ -43,6 +43,11 @@ sudo docker stop torrentmonitor
 sudo docker start torrentmonitor
 sudo docker restart torrentmonitor
 ```
+
+##Linux ARM
+The same as non ARM Linux but you have to use armhf image `nawa/armhf-torrentmonitor`
+
+	sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torrents:/DATA/htdocs/torrents -v path_to_data_folder/db:/DATA/htdocs/db nawa/armhf-torrentmonitor
 
 ##Windows
 Windows version uses `vagrant` with `docker` inside because I had problems with shared folders using `docker-machine`.
