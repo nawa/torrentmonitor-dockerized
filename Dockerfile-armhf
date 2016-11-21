@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM container4armhf/armhf-alpine:latest
 
 WORKDIR /install
 
