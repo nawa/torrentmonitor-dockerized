@@ -8,6 +8,8 @@ fi
 #Alpine iconv doesn't support "//IGNORE"
 /torrentmonitor/clean-iconv-ignores.sh
 
+crond
+
 chown -R nginx:www-data /DATA/htdocs
 chmod -R a+rw /DATA/htdocs
 chmod -R 777 /DATA/htdocs/db
