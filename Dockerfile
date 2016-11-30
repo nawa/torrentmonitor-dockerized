@@ -4,7 +4,7 @@ WORKDIR /install
 
 RUN apk update && apk upgrade && \
 
-	apk add wget unzip nginx sqlite php5-common php5-cli php5-fpm php5-curl php5-sqlite3  php5-pdo_sqlite php5-iconv php5-json php5-ctype && \
+	apk add wget unzip nginx sqlite php5-common php5-cli php5-fpm php5-curl php5-sqlite3  php5-pdo_sqlite php5-iconv php5-json php5-ctype php5-zip && \
 
 	wget -q http://korphome.ru/torrent_monitor/tm-latest.zip -O ./tm-latest.zip && \
 	unzip ./tm-latest.zip && \
