@@ -3,7 +3,7 @@ services:
   torrentmonitor:
     container_name: torrentmonitor
     hostname: torrentmonitor
-    image: aldemion/torrentmonitor
+    image: nawa/torrentmonitor
     ports:
       - 8080:80/tcp
     volumes:

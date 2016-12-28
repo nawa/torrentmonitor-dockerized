@@ -1,6 +1,6 @@
 -include env
 IMAGENAME := torrentmonitor
-NAMESPACE := aldemion
+NAMESPACE := nawa
 SHA := $(shell git rev-parse --short HEAD)
 timestamp := $(shell date +"%Y%m%d%H%M")
 
