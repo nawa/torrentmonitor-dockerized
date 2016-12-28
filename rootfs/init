@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Populate database if not exists
+test -f /data/htdocs/db/tm.sqlite || cp /data/htdocs/db_schema/tm.sqlite /data/htdocs/db/tm.sqlite
+
+# Configure system
+# Set PHP timezone
+sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php5/php.ini
+sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php5/cli/php.ini
+
+# Set PHP memory limit
+sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php5/php.ini
+sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php5/cli/php.ini
+
+# Set cront timeuot for engine.php
+sed -i "s#CRON_TIMEOUT#${CRON_TIMEOUT}#" /var/spool/cron/crontabs/root
+
+# Send all logs from php-fpm to stdout
+ln -sf /dev/stdout /var/log/php-fpm.log
+
+# Set owner for app directory
+chown -R nginx:nginx /data/htdocs
+
+# Start apps
+crond
+php-fpm
+nginx -g 'daemon off;'
