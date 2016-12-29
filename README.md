@@ -33,8 +33,8 @@ Linux version uses `docker` directly. You wouldn't download any sources because 
 
 	* you can change server port from `8080` to your preferred port
 	* you need to change volume location to database and downloaded torrents. As a result you could use persistent data between another containers
-	* also you can specify environment variabls to change default behaviour of container 
-		* -e CRON_TIMEOUT="*/10 * * * *" # Specify execution timeouti in crontab format. Default - every 10 minutes.
+	* also you can specify environment variables to change default behaviour of container 
+		* -e CRON_TIMEOUT="0 * * * *" # Specify execution timeout in crontab format. Default - every hour.
 		* -e PHP_TIMEZONE="Europe/Kiev" # Set default timezone for PHP. Default - UTC.
 		* -e PHP_MEMORY_LIMIT="512M" # Set php memory limit. Default - 512M.
 
@@ -51,6 +51,11 @@ sudo docker stop torrentmonitor
 sudo docker start torrentmonitor
 sudo docker restart torrentmonitor
 ```
+
+##Linux ARM
+The same as non ARM Linux but you have to use armhf image `nawa/armhf-torrentmonitor`
+
+	sudo docker run -d --name torrentmonitor --restart=always -p 8080:80 -v path_to_data_folder/torrents:/data/htdocs/torrents -v path_to_data_folder/db:/data/htdocs/db nawa/armhf-torrentmonitor
 
 ##Windows
 Windows version uses `vagrant` with `docker` inside because I had problems with shared folders using `docker-machine`.

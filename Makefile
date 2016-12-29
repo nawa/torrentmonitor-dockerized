@@ -1,4 +1,4 @@
--include env
+-include .env
 IMAGENAME := torrentmonitor
 NAMESPACE := nawa
 SHA := $(shell git rev-parse --short HEAD)

@@ -1,15 +1,16 @@
 version: '2'
 services:
   torrentmonitor:
-    container_name: torrentmonitor
+    container_name: ${CONTAINER_NAME}
     hostname: torrentmonitor
     image: nawa/torrentmonitor
+    restart: ${RESTART_POLICY}
     ports:
-      - 8080:80/tcp
+      - ${LISTEN_PORT}:${HTTP_PORT}/tcp
     volumes:
-      - /tmp/torrentmonitor-torrents:/data/htdocs/torrents
-      - /tmp/torrentmonitor-db:/data/htdocs/db
+      - ${TORRENTS}:/data/htdocs/torrents
+      - ${DB}:/data/htdocs/db
     environment:
-      - CRON_TIMEOUT=*/10 * * * *
-      - PHP_TIMEZONE=Europe/Kiev
-      - PHP_MEMORY_LIMIT=512M
+      - CRON_TIMEOUT=${CRON_TIMEOUT}
+      - PHP_TIMEZONE=${PHP_TIMEZONE}
+      - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT}
