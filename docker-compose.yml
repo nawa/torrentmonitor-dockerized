@@ -1,24 +1,16 @@
-# MAIN_HOST=`/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'` docker-compose up -d
-
-torrentmonitor:
-  image: nawa/torrentmonitor
-  ports:
-   - "8080:80"
-  volumes:
-   - /tmp/torrentmonitor/torrents:/DATA/htdocs/torrents
-   - /tmp/torrentmonitor/db:/DATA/htdocs/db
-  links:
-   - tor
-   - transmission
-
-tor:
-  image: cmondies/synology-tor-client-minimal
-
-transmission:
-  image: wbouzane/transmission-daemon
-  ports:
-   - "9091:9091"
-  volumes:
-   - /tmp/transmission-downloads:/downloads
-  extra_hosts:
-   - "dockerhost:${MAIN_HOST}"
+version: '2'
+services:
+  torrentmonitor:
+    container_name: ${CONTAINER_NAME}
+    hostname: torrentmonitor
+    image: nawa/torrentmonitor
+    restart: ${RESTART_POLICY}
+    ports:
+      - ${LISTEN_PORT}:${HTTP_PORT}/tcp
+    volumes:
+      - ${TORRENTS}:/data/htdocs/torrents
+      - ${DB}:/data/htdocs/db
+    environment:
+      - CRON_TIMEOUT=${CRON_TIMEOUT}
+      - PHP_TIMEZONE=${PHP_TIMEZONE}
+      - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT}
