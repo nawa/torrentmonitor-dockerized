@@ -2,7 +2,7 @@
 # Set the base image for subsequent instructions:
 #------------------------------------------------------------------------------
 
-FROM nginx:stable-alpine
+FROM alpine:latest
 MAINTAINER Andrey Aleksandrov <alex.demion@gmail.com>, Siarhei Navatski <navatski@gmail.com>
 
 #------------------------------------------------------------------------------
@@ -28,13 +28,17 @@ ADD rootfs /
 RUN apk update \
     && apk upgrade \
     && apk --no-cache add --update -t deps wget unzip sqlite \
-    && apk --no-cache add php5-common php5-cli php5-fpm php5-curl php5-sqlite3 php5-pdo_sqlite php5-iconv php5-json php5-ctype php5-zip \
+    && apk --no-cache add nginx php5-common php5-cli php5-fpm php5-curl php5-sqlite3 php5-pdo_sqlite php5-iconv php5-json php5-ctype php5-zip \
     && wget -q http://korphome.ru/torrent_monitor/tm-latest.zip -O /tmp/tm-latest.zip \
     && unzip /tmp/tm-latest.zip -d /tmp/ \
     && mv /tmp/TorrentMonitor-master/* /data/htdocs \
     && cat /data/htdocs/db_schema/sqlite.sql | sqlite3 /data/htdocs/db_schema/tm.sqlite \
+    && mkdir -p /var/log/nginx/ \
+    && ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log \
     && ln -sf /dev/stdout /var/log/php-fpm.log \
     && apk del --purge deps; rm -rf /tmp/* /var/cache/apk/*
+
 
 #------------------------------------------------------------------------------
 # Set labels:
