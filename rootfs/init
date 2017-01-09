@@ -15,9 +15,6 @@ sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php5/cli/php.ini
 # Set cront timeuot for engine.php
 sed -i "s#CRON_TIMEOUT#${CRON_TIMEOUT}#" /var/spool/cron/crontabs/root
 
-# Clean UTF8 ignores
-find /data/htdocs -type f -exec sed -i "s#'utf-8//IGNORE'#'utf-8'#g" {} +
-
 # Set owner for app directory
 chown -R nginx:nginx /data/htdocs
 
