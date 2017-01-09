@@ -1,5 +1,6 @@
 -include .env
 IMAGENAME := torrentmonitor
+IMAGENAME_ARMHF := armhf-torrentmonitor
 NAMESPACE := nawa
 SHA := $(shell git rev-parse --short HEAD)
 timestamp := $(shell date +"%Y%m%d%H%M")
@@ -20,11 +21,20 @@ build:
 	docker rmi -f $(NAMESPACE)/$(IMAGENAME) || true
 	docker build -t $(NAMESPACE)/$(IMAGENAME) .
 
+build-armhf:
+	docker rmi -f $(NAMESPACE)/$(IMAGENAME_ARMHF):bak || true
+	docker tag $(NAMESPACE)/$(IMAGENAME_ARMHF) $(NAMESPACE)/$(IMAGENAME_ARMHF):bak || true
+	docker rmi -f $(NAMESPACE)/$(IMAGENAME_ARMHF) || true
+	docker build -f Dockerfile-armhf -t $(NAMESPACE)/$(IMAGENAME_ARMHF) .
+
 
 run:
 	docker rm $(CONTAINER_NAME) || true
 	docker run -d --name $(CONTAINER_NAME) $(ENVIRONMENT) $(RESTART) $(PORTS) $(VOLUMES) $(NAMESPACE)/$(IMAGENAME)
 
+run-armhf:
+	docker rm $(CONTAINER_NAME) || true
+	docker run -d --name $(CONTAINER_NAME) $(ENVIRONMENT) $(RESTART) $(PORTS) $(VOLUMES) $(NAMESPACE)/$(IMAGENAME_ARMHF)
 
 stop:
 	docker stop $(CONTAINER_NAME)
@@ -40,3 +50,7 @@ rmf:
 
 rmi:
 	docker rmi $(NAMESPACE)/$(IMAGENAME)
+
+rmi-armhf:
+	docker rmi $(NAMESPACE)/$(IMAGENAME_ARMHF)
+
