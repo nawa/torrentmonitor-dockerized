@@ -35,17 +35,20 @@ Dockerized torrentmonitor
 
 	* можно сменить порт с `8080` на более подходящий, если это надо. Порт `80` оставить как есть - это порт внутри контейнера
 	* при запуске используются `volumes`. Это что-то наподобие общих директорий между контейнером и хостовой машиной. Здесь два `volume` - один для базы, другой для скачанных торрент файлов. Смысл такой, что их можно использовать для бэкапа данных или если нужно стартануть контейнер с новой версией. Надеюсь это не понадобится, т.к. torrentmonitor обновляется сам, но лучше `volumes` использовать. После запуска контейнера и использования приложения в директориях `path_to_data_folder/torrents` и `path_to_data_folder/db` появятся файлы sqlite базы и файлы скачанных торрентов соответственно. Если все таки они не нужны, то можно просто убрать параметры с `-v`
-        * Также можно указать переменные окружения чтобы изменить значения по умолчанию
-                * -e CRON_TIMEOUT="0 * * * *" # Указать таймаут проверки обновлений торрентов в кронтаб формате. По умолчанию один час.
-                * -e PHP_TIMEZONE="Europe/Kiev" # Установить таймзону по умолчанию для PHP. По умолчанию - UTC.
-                * -e PHP_MEMORY_LIMIT="512M" # Установить лимит памяти для PHP. По умолчанию - 512M.
+	* Также можно указать переменные окружения чтобы изменить значения по умолчанию
+		*  `-e CRON_TIMEOUT="0 * * * *"` Указать таймаут проверки обновлений торрентов в [кронтаб формате](https://crontab.guru/examples.html). По умолчанию - раз в час
+		* `-e PHP_TIMEZONE="Europe/Kiev"` Установить таймзону по умолчанию для PHP. По умолчанию - UTC.
+		* `-e PHP_MEMORY_LIMIT="512M"` Установить лимит памяти для PHP. По умолчанию - 512M.
 
 3. Открываем в браузере [http://localhost:8080](http://localhost:8080)
 4. Profit
 
-Также можно импользовать docker-compose.
-Если у вас есть установленый docker-compose - просто сколнируйте этот репозиторий и выполните команду docker-compose up -d
+Также можно использовать `docker-compose`.
+Если у вас есть установленный `docker-compose` - просто склонируйте этот репозиторий и выполните команду 
+	
+    docker-compose up -d
 
+Можно посмотреть как запустить torrentmonitor вместе с Transmission и TOR https://github.com/nawa/torrentmonitor-dockerized/wiki/Torrentmonitor---Tramsmission---TOR
 
 ###Дополнительно
 Команду `docker run` нужно выполнить единожды. В случае повторного выполнения создастся еще один контейнер - оно вам надо? Чтобы управлять существующим контейнером, используйте
@@ -56,17 +59,16 @@ sudo docker restart torrentmonitor
 ```
 Если совсем интересно что там внутри, то можно зайти внутрь контейнера и посмотреть что там происходит
 ```bash
-docker exec -it torrentmonitor bash
+docker exec -it torrentmonitor sh
 ```
 
-Иногда выходят новые версии образа, например правится некоторый баг. Вообще принято, чтобы выходила новая версия образа, если выходит новая версия приложения, но т.к. `torrentmonitor` умеет обновляться сам, то обновлять образ в этом случае особой необходимости нет. Но все таки если это понадобилось, необходимо удалить старый контейнер и срартовать новый, обновить существующий никак нельзя
+Иногда выходят новые версии образа, например правится некоторый баг. Вообще принято, чтобы выходила новая версия образа, если выходит новая версия приложения, но т.к. `torrentmonitor` умеет обновляться сам, то обновлять образ в этом случае особой необходимости нет. Но все таки если это понадобилось, необходимо удалить старый контейнер и стартовать новый, обновить существующий никак нельзя
 ```bash
 sudo docker stop torrentmonitor //останавливаем контейнер
 sudo docker rm torrentmonitor	//удаляем его
 sudo docker pull nawa/torrentmonitor //обновляем образ
 //запускаем новый контейнер как раньше. При этом нам помогут volumes, которые сохранят данные из старого контейнера
-sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torrents:/usr/share/nginx/html/torrentmonitor/torrents -v path_to_data_folder/db:/usr/share/nginx/html/torrentmonitor/db nawa/torrentmonitor
-
+sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torrents:/data/htdocs/torrents -v path_to_data_folder/db:/data/htdocs/db nawa/torrentmonitor
 ```
 
 ##Linux ARM
@@ -74,56 +76,17 @@ sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torre
 
 	sudo docker run -d -p 8080:80 --name=torrentmonitor -v path_to_data_folder/torrents:/DATA/htdocs/torrents -v path_to_data_folder/db:/DATA/htdocs/db nawa/armhf-torrentmonitor
 
-##Windows, Mac
-`docker` работает только на Linux, но запустить хочется на Windows. Это можно сделать используя [docker-machine](https://docs.docker.com/engine/installation/windows/), но сделать это не получилось, т.к. не смог побороть проблему с пробросом общих директорий. Поэтому будем использовать `Vagrant` - это менеджер управления виртуальными машинами. Схема будет такая - с помощью `Vagrant` мы стартанем виртуальную машину c Linux, а уже на ней запустим `docker`-контейнер с `torrentmonitor`. При этом в общей директории будут находится файл базы `sqlite` и скачанные торрент-файлы - для бэкапа
+##Windows и MacOS
+###Docker native
+Вы можете использовать нативную версию докера если ваша ОС ее поддерживает
+	
+* Windows 10 Professional or Enterprise 64-bit с поддержкой Hyper-V
+* MacOS Yosemite 10.10.3 и выше
 
-###Использование
+Загрузите docker с https://www.docker.com/products/docker и следуйте инструкциям из части `Linux не ARM`
 
-1. Загрузить этот проект с описанием конфигурации `Vagrant` [torrentmonitor-dockerized.zip](https://github.com/Nawa/torrentmonitor-dockerized/archive/master.zip) и распаковать его куда вам удобно. Можно клонировать проект с помощью `git`, если вам это о чем то говорит `git clone https://github.com/Nawa/torrentmonitor-dockerized.git`
-2. Установить `Vagrant` https://www.vagrantup.com/downloads.html
-3. Установить `VirtualBox` https://www.virtualbox.org/wiki/Downloads. Именно на нем будет запускаться виртуальная машина, а `Vagrant` лишь управлять ей
-4. Открываем командную строку и переходим в директорию, куда распаковывали проект `torrentmonitor-dockerized/windows`. Она должна содержать `Vagrantfile`
-
-		cd torrentmonitor-dockerized/windows
-5. Запускаем виртуалку
-
-		vagrant up
-
-	Ждем пока все закончится, это может занять до 10 мин при первом запуске. После того, как стартанет виртуалка, автоматически стартанет необходимый `docker`-контейнер внутри
-6. Открываем в браузере [http://localhost:8080](http://localhost:8080)
-7. Надеюсь, радуемся
-
-###Дополнительно
-Полученную виртуальную машину можно остановить и стартовать заново.
-```bash
-vagrant halt		//остановить
-vagrant reload		//перезагрузить
-vagrant suspend		//поставить на паузу. При это освободится оперативка
-vagrant resume		//продолжить после паузы
-vagrant ssh			//зайти внутрь виртуалки и посмотреть что там
-```
-
-Параметры запускаемого сервера и виртуальной машины можно настроить, поредактировав `Vagrantfile`, а затем сделать `reload`. Например можно сменить порт с `8080`, а можно попробовать уменьшить количество выделяемой оперативной памяти.
-
-При использовании приложения файл базы сохранится в директории `torrentmonitor-dockerized/windows/data/db`, а скачанные торренты в `torrentmonitor-dockerized/windows/data/torrents`. Эти пути можно сменить, также поредактировав `Vagrantfile`
-```
-config.vm.synced_folder "./" .... //заменить "./" например на "D:/torrentmonitor"
-```
-
-
-
-Если у вас что-то сломается, то можно попробовать ~~выключить/включить~~ сделать две вещи:
-* Проинициализировать машину заново. При этом внутри создастся новый контейнер
-
-		vagrant provision
-
-* Если не прошлый пункт не помог, то перезоздаем вообще заново
-
-		vagrant destroy
-		vagrant up
-
-
-
+###Виртуалка с использованием vagrant
+Если `docker native` не поддерживается на вашей ОС, то можно поднять с `docker` в виртуальной машине, используя `vagrant` https://github.com/nawa/torrentmonitor-dockerized/wiki/Windows-and-MacOS-Virtual-machine-with-vagrant-(RU)
 
 ##Для связи
 Если есть замечания, предложения, то пишите тикеты в github - [https://github.com/Nawa/torrentmonitor-dockerized/issues/new](https://github.com/Nawa/torrentmonitor-dockerized/issues/new) или в ветку на форуме [http://korphome.ru/TorrentMonitor/viewtopic.php?f=7&p=938](http://korphome.ru/TorrentMonitor/viewtopic.php?f=7&p=938)
