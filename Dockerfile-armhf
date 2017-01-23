@@ -7,11 +7,12 @@ MAINTAINER Siarhei Navatski <navatski@gmail.com>, Andrey Aleksandrov <alex.demio
 #------------------------------------------------------------------------------
 # Environment variables:
 #------------------------------------------------------------------------------
-ENV VERSION="1.5" \
-    RELEASE_DATE="24.12.2016" \
+ENV VERSION="1.5.4" \
+    RELEASE_DATE="20.01.2017" \
     CRON_TIMEOUT="0 * * * *" \
     PHP_TIMEZONE="UTC" \
-    PHP_MEMORY_LIMIT="512M"
+    PHP_MEMORY_LIMIT="512M" \
+    LD_PRELOAD="/usr/local/lib/preloadable_libiconv.so"
 
 #------------------------------------------------------------------------------
 # Populate root file system:
@@ -39,9 +40,6 @@ RUN apk update \
     && ./configure --prefix=/usr/local \
     && make && make install \
     && apk del --purge deps; rm -rf /tmp/* /var/cache/apk/*
-
-#Load custom iconv
-ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
 
 #------------------------------------------------------------------------------
 # Set labels:
