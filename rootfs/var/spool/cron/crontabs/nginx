@@ -1,1 +1,1 @@
-CRON_TIMEOUT php -q /data/htdocs/engine.php >> /var/log/nginx/torrentmonitor_cron_error.log 2>&1
+CRON_TIMEOUT CRON_COMMAND
