@@ -12,11 +12,12 @@ sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php5/cli/php.ini
 sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php5/php.ini
 sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php5/cli/php.ini
 
-# Set cront timeuot for engine.php
-sed -i "s#CRON_TIMEOUT#${CRON_TIMEOUT}#" /var/spool/cron/crontabs/root
+# Set cron timeuot for engine.php
+sed -i "s#CRON_TIMEOUT#${CRON_TIMEOUT}#" /var/spool/cron/crontabs/nginx
 
 # Set owner for app directory
 chown -R nginx:nginx /data/htdocs
+chown -R nginx:nginx /var/log/nginx
 
 # Write temp files by nginx
 chmod 777 /tmp
