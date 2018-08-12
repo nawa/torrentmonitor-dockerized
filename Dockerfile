@@ -35,7 +35,7 @@ RUN apk update \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
     && ln -sf /dev/stdout /var/log/php-fpm.log \
     && rm /usr/bin/iconv \
-    && curl -SL http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz | tar -xz -C /tmp \
+    && curl -SL http://ftpmirror.gnu.org/libiconv/libiconv-1.14.tar.gz | tar -xz -C /tmp \
     && cd /tmp/libiconv-1.14 && patch -p1 < /tmp/iconv-patch.patch \
     && ./configure --prefix=/usr/local \
     && make && make install \
