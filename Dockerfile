@@ -7,8 +7,8 @@ MAINTAINER Siarhei Navatski <navatski@gmail.com>, Andrey Aleksandrov <alex.demio
 #------------------------------------------------------------------------------
 # Environment variables:
 #------------------------------------------------------------------------------
-ENV VERSION="1.7.6" \
-    RELEASE_DATE="24.06.2018" \
+ENV VERSION="1.7.7" \
+    RELEASE_DATE="12.08.2018" \
     CRON_TIMEOUT="0 * * * *" \
     PHP_TIMEZONE="UTC" \
     PHP_MEMORY_LIMIT="512M" \
