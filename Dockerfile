@@ -7,8 +7,8 @@ MAINTAINER Siarhei Navatski <navatski@gmail.com>, Andrey Aleksandrov <alex.demio
 #------------------------------------------------------------------------------
 # Environment variables:
 #------------------------------------------------------------------------------
-ENV VERSION="1.7.7" \
-    RELEASE_DATE="05.08.2018" \
+ENV VERSION="1.7.9" \
+    RELEASE_DATE="03.05.2019" \
     CRON_TIMEOUT="0 * * * *" \
     CRON_COMMAND="php -q /data/htdocs/engine.php >> /var/log/nginx/torrentmonitor_cron_error.log 2>\&1" \
     PHP_TIMEZONE="UTC" \
