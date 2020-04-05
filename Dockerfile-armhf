@@ -25,7 +25,7 @@ ADD rootfs /
 RUN apk update \
     && apk upgrade \
     && apk --no-cache add --update -t deps wget unzip sqlite build-base tar re2c make file curl \
-    && apk --no-cache add nginx php5-common php5-cli php5-fpm php5-curl php5-sqlite3 php5-pdo_sqlite php5-iconv php5-json php5-ctype php5-zip \
+    && apk --no-cache add nginx php5-common php5-cli php5-fpm php5-curl php5-sqlite3 php5-pdo_sqlite php5-iconv php5-json php5-ctype php5-zip php5-dom \
     && wget -q http://korphome.ru/torrent_monitor/tm-latest.zip -O /tmp/tm-latest.zip \
     && unzip /tmp/tm-latest.zip -d /tmp/ \
     && mv /tmp/TorrentMonitor-master/* /data/htdocs \
