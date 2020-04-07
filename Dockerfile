@@ -1,14 +1,14 @@
 #------------------------------------------------------------------------------
 # Set the base image for subsequent instructions:
 #------------------------------------------------------------------------------
-FROM alpine:3.4
+FROM alpine:3.11
 MAINTAINER Siarhei Navatski <navatski@gmail.com>, Andrey Aleksandrov <alex.demion@gmail.com>
 
 #------------------------------------------------------------------------------
 # Environment variables:
 #------------------------------------------------------------------------------
-ENV VERSION="1.7.9" \
-    RELEASE_DATE="03.05.2019" \
+ENV VERSION="1.8.2" \
+    RELEASE_DATE="03.01.2020" \
     CRON_TIMEOUT="0 * * * *" \
     CRON_COMMAND="php -q /data/htdocs/engine.php >> /var/log/nginx/torrentmonitor_cron_error.log 2>\&1" \
     PHP_TIMEZONE="UTC" \
@@ -36,8 +36,7 @@ RUN apk update \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
     && ln -sf /dev/stdout /var/log/php-fpm.log \
     && rm /usr/bin/iconv \
-    && curl -SL http://ftpmirror.gnu.org/libiconv/libiconv-1.14.tar.gz | tar -xz -C /tmp \
-    && cd /tmp/libiconv-1.14 && patch -p1 < /tmp/iconv-patch.patch \
+    && curl -SL http://ftpmirror.gnu.org/libiconv/libiconv-1.16.tar.gz | tar -xz -C /tmp \
     && ./configure --prefix=/usr/local \
     && make && make install \
     && apk del --purge deps; rm -rf /tmp/* /var/cache/apk/*
