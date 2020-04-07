@@ -25,5 +25,5 @@ chmod 777 /tmp
 
 # Start apps
 crond
-php-fpm
+php-fpm5
 nginx -g 'daemon off;'
