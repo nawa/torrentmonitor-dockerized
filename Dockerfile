@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # Set the base image for subsequent instructions:
 #------------------------------------------------------------------------------
-FROM alpine:3.11
+FROM alpine:3.6
 MAINTAINER Siarhei Navatski <navatski@gmail.com>, Andrey Aleksandrov <alex.demion@gmail.com>
 
 #------------------------------------------------------------------------------
@@ -37,6 +37,7 @@ RUN apk update \
     && ln -sf /dev/stdout /var/log/php-fpm.log \
     && rm /usr/bin/iconv \
     && curl -SL http://ftpmirror.gnu.org/libiconv/libiconv-1.16.tar.gz | tar -xz -C /tmp \
+    && cd /tmp/libiconv-1.16 \
     && ./configure --prefix=/usr/local \
     && make && make install \
     && apk del --purge deps; rm -rf /tmp/* /var/cache/apk/*
