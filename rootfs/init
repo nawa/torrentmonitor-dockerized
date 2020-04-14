@@ -30,5 +30,5 @@ test -f /usr/bin/php || ln -s /usr/bin/php5 /usr/bin/php
 
 # Start apps
 crond
-php-fpm
+php-fpm5
 nginx -g 'daemon off;'
