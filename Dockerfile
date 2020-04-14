@@ -36,8 +36,8 @@ RUN apk update \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
     && ln -sf /dev/stdout /var/log/php-fpm.log \
     && rm /usr/bin/iconv \
-    && curl -SL http://ftpmirror.gnu.org/libiconv/libiconv-1.16.tar.gz | tar -xz -C /tmp \
-    && cd /tmp/libiconv-1.16 \
+    && curl -SL http://ftpmirror.gnu.org/libiconv/libiconv-1.15.tar.gz | tar -xz -C /tmp \
+    && cd /tmp/libiconv-1.15 \
     && ./configure --prefix=/usr/local \
     && make && make install \
     && apk del --purge deps; rm -rf /tmp/* /var/cache/apk/*
