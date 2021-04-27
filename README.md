@@ -54,7 +54,7 @@ Linux version uses `docker` directly. You wouldn't download any sources because 
 	- `CRON_COMMAND="/bin/sh /tmp/update.sh"` Specify custom command to update torrents, e.g. for extended logging. Default: `"php -q /data/htdocs/engine.php"`
 	- `PHP_TIMEZONE="Europe/Moscow"` Set default timezone for PHP. Default - UTC.
 	- `PHP_MEMORY_LIMIT="512M"` Set php memory limit. Default - 512M.
-- if you want guest system to have host's timezone, add `localtime` bind mapping as in the example below.
+- if you want guest system to have host's timezone, add `localtime` binding as in the example below.
 
 #### Example:
 
@@ -64,7 +64,7 @@ Linux version uses `docker` directly. You wouldn't download any sources because 
 			-p 8080:80 \
 			-v <path_to_torrents_folder>:/data/htdocs/torrents \
 			-v <path_to_db_folder>:/data/htdocs/db \
-			--mount src=/etc/localtime,dst=/etc/localtime,type=bind \
+			-v /etc/localtime:/etc/localtime:ro \
 			-e PHP_TIMEZONE="Europe/Moscow" \
 			-e CRON_TIMEOUT="15 8-23 * * *" \
 			-e CRON_COMMAND="/bin/sh /tmp/update.sh" \
@@ -72,12 +72,12 @@ Linux version uses `docker` directly. You wouldn't download any sources because 
 
 ### Compose
 Also you can use `docker-compose`.  
-If you have `docker-compose` installed - just simply clone this repository and run 
+If you have `docker-compose` installed, download [yaml script](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/docker-compose.yml), edit it with your values and run 
 
 	docker-compose up -d
 
 ### Torrentmonitor + TOR + Transmission
-You can teach ninja way and do run torrentmonitor with Transmission and TOR together: https://github.com/nawa/torrentmonitor-dockerized/wiki/Torrentmonitor---Tramsmission---TOR
+You can do ninja craft to do run torrentmonitor with Transmission and TOR together. Use `docker-compose` with [script](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/docker-compose.yml)
 
 ### Additional
 The most useful commands - Stop/Start/Restart container:
