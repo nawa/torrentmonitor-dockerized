@@ -71,13 +71,12 @@ Linux version uses `docker` directly. You wouldn't download any sources because 
 			alfonder/torrentmonitor
 
 ### Compose
-Also you can use `docker-compose`.  
-If you have `docker-compose` installed, download [yaml script](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/docker-compose.yml), edit it with your values and run 
+If you prefer using `docker-compose`, download [yaml script](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/docker-compose.yml), edit it with your values and run 
 
 	docker-compose up -d
 
 ### Torrentmonitor + TOR + Transmission
-You can do ninja craft to do run torrentmonitor with Transmission and TOR together. Use `docker-compose` with [script](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/docker-compose.yml)
+You can do ninja craft to run torrentmonitor with Transmission and TOR together. Use `docker-compose` with [script](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/docker-compose.yml)
 
 ### Additional
 The most useful commands - Stop/Start/Restart container:
