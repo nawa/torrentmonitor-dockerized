@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # Set the base image for subsequent instructions:
 #------------------------------------------------------------------------------
-FROM alpine:3.8
+FROM alpine:3.14
 MAINTAINER Siarhei Navatski <navatski@gmail.com>, Andrey Aleksandrov <alex.demion@gmail.com>, Alexander Fomichev <fomichev.ru@gmail.com>
 
 #------------------------------------------------------------------------------
@@ -13,7 +13,7 @@ ENV VERSION="1.8.7" \
     CRON_COMMAND="php -q /data/htdocs/engine.php >> /var/log/nginx/torrentmonitor_cron_error.log 2>\&1" \
     PHP_TIMEZONE="UTC" \
     PHP_MEMORY_LIMIT="512M" \
-    LD_PRELOAD="/usr/local/lib/preloadable_libiconv.so"
+    LD_PRELOAD="/usr/lib/preloadable_libiconv.so"
 
 #------------------------------------------------------------------------------
 # Populate root file system:
@@ -25,8 +25,9 @@ ADD rootfs /
 #------------------------------------------------------------------------------
 RUN apk update \
     && apk upgrade \
-    && apk --no-cache add --update -t deps wget unzip sqlite build-base tar re2c make file curl \
-    && apk --no-cache add nginx php5-common php5-cli php5-fpm php5-curl php5-sqlite3 php5-pdo_sqlite php5-iconv php5-json php5-ctype php5-zip \
+    && apk --no-cache add --update -t deps wget unzip sqlite \
+    && apk --no-cache add nginx php8 php8-common php8-fpm php8-curl php8-sqlite3 php8-pdo_sqlite php8-xml php8-simplexml php8-session php8-iconv php8-mbstring php8-ctype php8-zip \
+    && apk add gnu-libiconv=1.15-r3 --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community/ \
     && wget -q http://korphome.ru/torrent_monitor/tm-latest.zip -O /tmp/tm-latest.zip \
     && unzip /tmp/tm-latest.zip -d /tmp/ \
     && mv /tmp/TorrentMonitor-master/* /data/htdocs \
@@ -35,11 +36,6 @@ RUN apk update \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
     && ln -sf /dev/stdout /var/log/php-fpm.log \
-    && rm /usr/bin/iconv \
-    && curl -SL http://ftpmirror.gnu.org/libiconv/libiconv-1.15.tar.gz | tar -xz -C /tmp \
-    && cd /tmp/libiconv-1.15 \
-    && ./configure --prefix=/usr/local \
-    && make && make install \
     && apk del --purge deps; rm -rf /tmp/* /var/cache/apk/*
 
 #------------------------------------------------------------------------------

@@ -5,13 +5,13 @@ test -f /data/htdocs/db/tm.sqlite || cp /data/htdocs/db_schema/tm.sqlite /data/h
 
 # Configure system
 # Set PHP timezone
-sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php5/php.ini
-sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php5/cli/php.ini
+sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php8/php.ini
+sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php8/cli/php.ini
 
 # Set PHP memory limit
-sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php5/php.ini
-sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php5/cli/php.ini
-sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php5/php-fpm.conf
+sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php8/php.ini
+sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php8/cli/php.ini
+sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php8/php-fpm.conf
 
 # Set cron timeuot for engine.php
 sed -i "s#CRON_TIMEOUT#${CRON_TIMEOUT}#" /var/spool/cron/crontabs/nginx
@@ -25,10 +25,10 @@ chown -R nginx:nginx /var/log/nginx
 chmod 777 /tmp
 
 # Compatibility links
-test -f /usr/bin/php-fpm || ln -s /usr/bin/php-fpm5 /usr/bin/php-fpm
-test -f /usr/bin/php || ln -s /usr/bin/php5 /usr/bin/php
+test -f /usr/bin/php-fpm || ln -s /usr/sbin/php-fpm8 /usr/bin/php-fpm
+test -f /usr/bin/php || ln -s /usr/bin/php8 /usr/bin/php
 
 # Start apps
 crond
-php-fpm5
+php-fpm
 nginx -g 'daemon off;'
