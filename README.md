@@ -23,10 +23,12 @@ Supported torrent trackers
 - newstudio.tv
 - novafilm.tv
 
-## Linux (x86)
-Linux version uses `docker` directly. You wouldn't download any sources because docker image will be downloaded from Docker Hub automatically
+### Credits
+Many thanks to [nawa](https://github.com/nawa) who had started 'torrentmonitor-dockerized' project back several years ago. His great job made me fork this project when he stopped support it.
 
-### Usage
+## How to Use
+
+### Basic Usage
 1. Install docker https://docs.docker.com/engine/install/
 2. Depending on your system type you need to run `docker` command with `sudo` or add the user to "docker" group
 3. Get the container image from DockerHub: 
@@ -91,13 +93,27 @@ To get the current running container version, you should run command:
 
 	docker container inspect -f '{{ index .Config.Labels "ru.korphome.version" }}' torrentmonitor
 
-## Linux (ARM)
-You can use Torrentmonitor on Raspberry Pi (or similar) Linux box. The method is the same as for x86. Corresponding image for ARM platform will be pulled automatically.
+## Platform Support
+There are images for almost all platform types, supported by Docker:
+- x86-64
 
-## Windows and MacOS
-You can use docker native if your OS supports it
+Next will be available soon:
+- x86
+- arm64
+- arm32
+- ppc64le
+- s390x
+
+If you use the platform that is not supported yet, file an issue. I'll add it ASAP.
+
+## OS Support
+### Linux
+Linux version uses `docker` directly. You don't have to download any sources because corresponding docker image will be downloaded from Docker Hub (or Guthub Registry) automatically
+
+### Windows and MacOS
+You can use Docker Desktop natively for supported OS versions. Minimal requirement:
 	
 - Windows 10 Professional or Enterprise 64-bit with Hyper-V support
 - MacOS Yosemite 10.10.3 or above
 
-Download docker native from https://www.docker.com/products/docker
+Download docker native from https://www.docker.com/products/docker-desktop
