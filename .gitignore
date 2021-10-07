@@ -2,3 +2,4 @@ windows/.vagrant
 windows/data
 *.swp
 env
+.dccache
