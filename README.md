@@ -33,7 +33,11 @@ Many thanks to [nawa](https://github.com/nawa) who had started 'torrentmonitor-d
 2. Depending on your system type you need to run `docker` command with `sudo` or add the user to "docker" group
 3. Get the container image from DockerHub: 
 
-		docker pull alfonder/torrentmonitor
+		docker pull alfonder/torrentmonitor:latest
+
+	Alternative way: get the image from Github Registry:
+
+		docker pull ghcr.io/alfonder/torrentmonitor:latest
 
 4. Run container:
 
@@ -73,7 +77,7 @@ Many thanks to [nawa](https://github.com/nawa) who had started 'torrentmonitor-d
 			alfonder/torrentmonitor
 
 ### Compose
-If you prefer using `docker-compose`, download [yaml script](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/docker-compose.yml), edit it with your values and run 
+If you prefer using `docker-compose`, download [yaml script](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/docker-compose.yml) and [env config](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/.env) edit `.env` with your values and run 
 
 	docker-compose up -d
 
@@ -96,19 +100,20 @@ To get the current running container version, you should run command:
 ## Platform Support
 There are images for almost all platform types, supported by Docker:
 - x86-64
-
-Next will be available soon:
 - x86
 - arm64
 - arm32
 - ppc64le
-- s390x
 
-If you use the platform that is not supported yet, file an issue. I'll add it ASAP.
+Next platforms could be added upon request:
+- s390x
+- mips
+
+If you use a platform that is not supported yet, file an issue. I'll add it ASAP.
 
 ## OS Support
 ### Linux
-Linux version uses `docker` directly. You don't have to download any sources because corresponding docker image will be downloaded from Docker Hub (or Guthub Registry) automatically
+Linux version uses `docker` directly. You don't have to download any sources or select right platform. Corresponding docker image will be downloaded from DockerHub (or Github Registry) automatically.
 
 ### Windows and MacOS
 You can use Docker Desktop natively for supported OS versions. Minimal requirement:
