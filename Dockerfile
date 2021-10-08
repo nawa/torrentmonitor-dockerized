@@ -26,7 +26,7 @@ ADD rootfs /
 RUN apk update \
     && apk upgrade \
     && apk --no-cache add --update -t deps wget unzip sqlite \
-    && apk --no-cache add nginx php8 php8-common php8-fpm php8-curl php8-sqlite3 php8-pdo_sqlite php8-xml php8-simplexml php8-session php8-iconv php8-mbstring php8-ctype php8-zip \
+    && apk --no-cache add nginx php7 php7-common php7-fpm php7-curl php7-sqlite3 php7-pdo_sqlite php7-xml php7-json php7-simplexml php7-session php7-iconv php7-mbstring php7-ctype php7-zip \
     && apk add gnu-libiconv=1.15-r3 --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community/ \
     && wget -q http://korphome.ru/torrent_monitor/tm-latest.zip -O /tmp/tm-latest.zip \
     && unzip /tmp/tm-latest.zip -d /tmp/ \
