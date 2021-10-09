@@ -5,21 +5,28 @@ test -f /data/htdocs/db/tm.sqlite || cp /data/htdocs/db_schema/tm.sqlite /data/h
 
 # Configure system
 # Set PHP timezone
-sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php5/php.ini
-sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php5/cli/php.ini
+sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php7/php.ini
+sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php7/cli/php.ini
 
 # Set PHP memory limit
-sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php5/php.ini
-sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php5/cli/php.ini
+sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php7/php.ini
+sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php7/cli/php.ini
+sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php7/php-fpm.conf
 
-# Set cront timeuot for engine.php
-sed -i "s#CRON_TIMEOUT#${CRON_TIMEOUT}#" /var/spool/cron/crontabs/root
+# Set cron timeuot for engine.php
+sed -i "s#CRON_TIMEOUT#${CRON_TIMEOUT}#" /var/spool/cron/crontabs/nginx
+sed -i "s#CRON_COMMAND#${CRON_COMMAND}#" /var/spool/cron/crontabs/nginx
 
 # Set owner for app directory
 chown -R nginx:nginx /data/htdocs
+chown -R nginx:nginx /var/log/nginx
 
 # Write temp files by nginx
 chmod 777 /tmp
+
+# Compatibility links
+test -f /usr/bin/php-fpm || ln -s /usr/sbin/php-fpm7 /usr/bin/php-fpm
+test -f /usr/bin/php || ln -s /usr/bin/php7 /usr/bin/php
 
 # Start apps
 crond
