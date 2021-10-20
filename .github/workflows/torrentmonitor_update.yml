@@ -1,4 +1,4 @@
-name: Update TorrentMonitor verions
+name: Update TorrentMonitor version
 
 on:
   schedule:
@@ -36,7 +36,6 @@ jobs:
       - name: Create Pull Request, Bump tm-latest.zip, torrentmonitor version ${{ steps.downloadtorrentmonitor.outputs.tm_version }}
         uses: peter-evans/create-pull-request@v3.10.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ steps.downloadtorrentmonitor.outputs.pr_branch }}
           commit-message: Bump tm-latest.zip, version ${{ steps.downloadtorrentmonitor.outputs.tm_version }}
           delete-branch: true

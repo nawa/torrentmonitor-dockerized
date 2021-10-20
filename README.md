@@ -35,7 +35,7 @@ Many thanks to [nawa](https://github.com/nawa) who had started 'torrentmonitor-d
 
 		docker pull alfonder/torrentmonitor:latest
 
-	Alternative way: get the image from Github Registry:
+	Alternative way: get the image from GitHub Registry:
 
 		docker pull ghcr.io/alfonder/torrentmonitor:latest
 
@@ -113,7 +113,7 @@ If you use a platform that is not supported yet, file an issue. I'll add it ASAP
 
 ## OS Support
 ### Linux
-Linux version uses `docker` directly. You don't have to download any sources or select right platform. Corresponding docker image will be downloaded from DockerHub (or Github Registry) automatically.
+Linux version uses `docker` directly. You don't have to download any sources or select right platform. Corresponding docker image will be downloaded from DockerHub (or GitHub Registry) automatically.
 
 ### Windows and MacOS
 You can use Docker Desktop natively for supported OS versions. Minimal requirement:
