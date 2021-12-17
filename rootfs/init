@@ -6,17 +6,21 @@ test -f /data/htdocs/db/config.xml || cp /data/htdocs/config.xml /data/htdocs/db
 
 # Configure system
 # Set PHP timezone
-sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php7/php.ini
-sed -i "s#PHP_TIMEZONE#${PHP_TIMEZONE}#" /etc/php7/cli/php.ini
+sed -i "/date\.timezone/d" /etc/php7/php.ini
+echo "date.timezone = ${PHP_TIMEZONE}" >> /etc/php7/php.ini
+sed -i "/date\.timezone/d" /etc/php7/cli/php.ini
+echo "date.timezone = ${PHP_TIMEZONE}" >> /etc/php7/cli/php.ini
 
 # Set PHP memory limit
-sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php7/php.ini
-sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php7/cli/php.ini
-sed -i "s#PHP_MEMORY_LIMIT#${PHP_MEMORY_LIMIT}#" /etc/php7/php-fpm.conf
+sed -i "/memory_limit/d" /etc/php7/php.ini
+echo "memory_limit = ${PHP_MEMORY_LIMIT}" >> /etc/php7/php.ini
+sed -i "/memory_limit/d" /etc/php7/cli/php.ini
+echo "memory_limit = ${PHP_MEMORY_LIMIT}" >> /etc/php7/cli/php.ini
+sed -i "/memory_limit/d" /etc/php7/php-fpm.conf
+echo "php_admin_value[memory_limit] = ${PHP_MEMORY_LIMIT}" >> /etc/php7/php-fpm.conf
 
 # Set cron timeuot for engine.php
-sed -i "s#CRON_TIMEOUT#${CRON_TIMEOUT}#" /var/spool/cron/crontabs/nginx
-sed -i "s#CRON_COMMAND#${CRON_COMMAND}#" /var/spool/cron/crontabs/nginx
+echo "${CRON_TIMEOUT} ${CRON_COMMAND}" > /etc/crontabs/nginx
 
 # Set owner for app directory
 chown -R nginx:nginx /data/htdocs
