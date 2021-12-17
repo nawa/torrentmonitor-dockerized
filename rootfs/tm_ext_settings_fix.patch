@@ -1,0 +1,37 @@
+--- ./TorrentMonitor-master/action.php.orig	2021-12-17 10:21:00.663062575 +0300
++++ ./TorrentMonitor-master/action.php	2021-12-17 12:40:46.984694471 +0300
+@@ -443,7 +443,8 @@
+ 	//Обновляем расширенные настройки
+ 	if ($_POST['action'] == 'update_extended_settings')
+ 	{
+-		if (file_put_contents($dir.'config.xml', $_POST['settings']))
++		$config = Config::read('ext_filename');
++		if (file_put_contents($config, $_POST['settings']))
+ 		{
+ 			$return['error'] = FALSE;
+ 			$return['msg'] = 'Расширенные настройки монитора обновлены.';
+--- ./TorrentMonitor-master/include/settings.php.orig	2021-12-17 10:19:42.745907320 +0300
++++ ./TorrentMonitor-master/include/settings.php	2021-12-17 12:37:46.359364881 +0300
+@@ -159,8 +159,9 @@
+     <form id="extended_settings">
+         <p>
+             <textarea name="settings" cols="30" rows="20"><?php 
+-                if (file_exists($dir.'config.xml'))
+-                    echo file_get_contents($dir.'config.xml');?>
++                $config = Config::read('ext_filename');
++                if (file_exists($config))
++                    echo file_get_contents($config);?>
+             </textarea>
+             <span class="subinput-text"><a href="#" onclick="show('help')">Помощь</a></span>
+         </p>
+--- ./TorrentMonitor-master/class/Config.class.php.orig	2021-12-17 10:18:45.759986961 +0300
++++ ./TorrentMonitor-master/class/Config.class.php	2021-12-17 12:48:48.318919974 +0300
+@@ -9,6 +9,8 @@
+         if ( ! isset($config) || empty($config))
+             $config = dirname(__FILE__).'/../'.'config.xml';
+ 
++        Config::write('ext_filename', $config);
++
+         if (file_exists($config))
+         {
+             $xml = simplexml_load_file($config);

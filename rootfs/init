@@ -2,6 +2,7 @@
 
 # Populate database if not exists
 test -f /data/htdocs/db/tm.sqlite || cp /data/htdocs/db_schema/tm.sqlite /data/htdocs/db/tm.sqlite
+test -f /data/htdocs/db/config.xml || cp /data/htdocs/config.xml /data/htdocs/db/config.xml
 
 # Configure system
 # Set PHP timezone
