@@ -1,3 +1,7 @@
+[![Latest Image](https://img.shields.io/docker/v/alfonder/torrentmonitor?color=lightgreen&label=latest)](https://hub.docker.com/r/alfonder/torrentmonitor)
+[![Image](https://img.shields.io/docker/image-size/alfonder/torrentmonitor?sort=semver)](https://hub.docker.com/r/alfonder/torrentmonitor)
+[![License](https://img.shields.io/github/license/alfonder/torrentmonitor-dockerized)](https://github.com/alfonder/torrentmonitor-dockerized)
+
 Dockerized torrentmonitor
 ========
 [[RU]](./README-RU.md)
@@ -77,12 +81,52 @@ Many thanks to [nawa](https://github.com/nawa) who had started 'torrentmonitor-d
 			alfonder/torrentmonitor
 
 ### Compose
-If you prefer using `docker-compose`, download [yaml script](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/docker-compose.yml) and [env config](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/.env) edit `.env` with your values and run 
+If you prefer using `docker-compose`, create a yaml script file [docker-compose.yml](docker-compose.yml):
+```yaml
+version: '3'
+
+services:
+  torrentmonitor:
+    container_name: ${SERVICENAME}
+    image: alfonder/torrentmonitor:${TM_TAG}
+    restart: unless-stopped
+    ports:
+      - ${LISTEN_PORT}:80
+    volumes:
+      - ${DATA_DIR}/torrents:/data/htdocs/torrents
+      - ${DATA_DIR}/db:/data/htdocs/db
+      - ${DATA_DIR}/logs:/data/htdocs/logs
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PHP_TIMEZONE=${TIMEZONE}
+      - CRON_TIMEOUT=${SCHEDULE}
+```
+and env config file [.env](.env) with your values:
+```shell
+# Specific image tag
+TM_TAG=latest
+
+# Container name to use via CLI
+SERVICENAME=torrentmonitor
+
+# Port for web-interface
+LISTEN_PORT=8081
+
+# Directory for container's persistent data
+DATA_DIR=/media/volume1/data/torrentmonitor
+
+# Service start schedule in Cron format
+SCHEDULE="*/30 8-22 * * *"
+
+# TImezone for web-interface
+TIMEZONE="Europe/Moscow"
+```
+then run: 
 
 	docker-compose up -d
 
 ### Torrentmonitor + TOR + Transmission
-You can do ninja craft to run torrentmonitor with Transmission and TOR together. Use `docker-compose` with [script](https://github.com/alfonder/torrentmonitor-dockerized/raw/master/docker-compose.yml)
+You can do ninja craft to run torrentmonitor with Transmission and TOR together. Use `docker-compose` with [script](examples/docker-compose.yml)
 
 ### Additional
 The most useful commands - Stop/Start/Restart container:
@@ -94,9 +138,9 @@ docker container restart torrentmonitor
 
 ### Version Info
 To get the current running container version, you should run command:
-
-	docker container inspect -f '{{ index .Config.Labels "ru.korphome.version" }}' torrentmonitor
-
+```
+docker container inspect -f '{{ index .Config.Labels "ru.korphome.version" }}' torrentmonitor
+```
 ## Platform Support
 There are images for almost all platform types, supported by Docker:
 - x86-64
