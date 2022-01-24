@@ -5,7 +5,7 @@ on:
 
 env:
   PLATFORMS: "linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le"
-  IMAGE_NAME: "torrentmonitor"
+  IMAGE_NAME: "test-torrentmonitor"
 
 jobs:
   update_config_build_and_deploy:
@@ -28,7 +28,11 @@ jobs:
           BRANCH=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")
           echo "::set-output name=branch::${BRANCH}"
 
-          IMAGE_TAG=${BRANCH}
+          if [[ ${BRANCH} == "master" ]]; then
+            IMAGE_TAG="devel"
+          else
+            IMAGE_TAG=${BRANCH}
+          fi
           echo "::set-output name=image_tag::${IMAGE_TAG}"
 
           echo "Action branch=${BRANCH} tag=${TAG} ref=${GITHUB_REF} image_tag=${IMAGE_TAG}"
@@ -81,3 +85,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           repository: ${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
           short-description: ${{ github.event.repository.description }}
+
+      - name: Notify on Telegram
+        uses: appleboy/telegram-action@v0.1.1
+        with:
+            to: ${{ secrets.TELEGRAM_TO }}
+            token: ${{ secrets.TELEGRAM_TOKEN }}
+            message: |
+                New Docker image is built and pushed:
+                ${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.git.outputs.image_tag }}
+
+                https://hub.docker.com/r/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
