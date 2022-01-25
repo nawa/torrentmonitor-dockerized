@@ -1,0 +1,28 @@
+name: Notify about PR or Issue
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  notify-on-telegram:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Notify on Telegram
+        uses: appleboy/telegram-action@v0.1.1
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          message: |
+            New ${{ github.event_name }} created
+
+            See details:
+            https://github.com/${{ github.repository }}/pulls
+            or
+            https://github.com/${{ github.repository }}/issues
+
+# vi:et:sw=2
