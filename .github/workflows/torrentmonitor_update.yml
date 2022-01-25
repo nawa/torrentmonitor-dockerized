@@ -37,9 +37,9 @@ jobs:
         uses: peter-evans/create-pull-request@v3.12.0
         with:
           branch: ${{ steps.downloadtorrentmonitor.outputs.pr_branch }}
-          commit-message: Bump tm-latest.zip, version ${{ steps.downloadtorrentmonitor.outputs.tm_version }}
+          commit-message: TM -> ${{ steps.downloadtorrentmonitor.outputs.tm_version }}
           delete-branch: true
-          title: Bump tm-latest.zip, version ${{ steps.downloadtorrentmonitor.outputs.tm_version }}
+          title: Bump TM to version ${{ steps.downloadtorrentmonitor.outputs.tm_version }}
           body: |
             Bump tm-latest.zip, version ${{ steps.downloadtorrentmonitor.outputs.tm_version }}, date ${{ steps.downloadtorrentmonitor.outputs.date }}
 
